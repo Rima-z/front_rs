@@ -1,0 +1,91 @@
+.soft-ui {
+  color: #3b3b3b;
+}
+
+.soft-ui .soft-page {
+  position: relative;
+}
+
+.soft-ui .soft-page > :first-child {
+  padding: 1rem 1.25rem;
+  border-radius: 1.25rem;
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.06);
+}
+
+.soft-ui .text-white {
+  color: #353535 !important;
+}
+
+.soft-ui .text-zinc-400,
+.soft-ui .text-zinc-500 {
+  color: #6f6f6f !important;
+}
+
+.soft-ui .text-zinc-300 {
+  color: #5f5f5f !important;
+}
+
+.soft-ui .bg-zinc-900\/30,
+.soft-ui .bg-zinc-900\/50,
+.soft-ui .bg-zinc-900\/90,
+.soft-ui .bg-zinc-900\/70,
+.soft-ui .bg-zinc-950\/90,
+.soft-ui .bg-zinc-800\/30,
+.soft-ui .bg-zinc-800\/50 {
+  background: rgba(255, 255, 255, 0.72) !important;
+}
+
+.soft-ui .bg-zinc-950\/50 {
+  background: rgba(235, 240, 244, 0.7) !important;
+}
+
+.soft-ui .from-zinc-900\/90,
+.soft-ui .via-zinc-900\/70,
+.soft-ui .to-zinc-950\/90,
+.soft-ui .from-zinc-950,
+.soft-ui .via-zinc-900,
+.soft-ui .to-zinc-950 {
+  --tw-gradient-from: rgba(255, 255, 255, 0.72) var(--tw-gradient-from-position) !important;
+  --tw-gradient-via: rgba(255, 255, 255, 0.62) var(--tw-gradient-via-position) !important;
+  --tw-gradient-to: rgba(245, 247, 249, 0.82) var(--tw-gradient-to-position) !important;
+}
+
+.soft-ui .border-zinc-800\/50,
+.soft-ui .border-zinc-800\/30,
+.soft-ui .border-zinc-700\/30,
+.soft-ui .border-zinc-700\/50 {
+  border-color: rgba(204, 211, 217, 0.8) !important;
+}
+
+.soft-ui .soft-page .bg-blue-500,
+.soft-ui .soft-page .hover\:bg-blue-600:hover {
+  background-color: #f4b400 !important;
+}
+
+.soft-ui .soft-page .bg-blue-500\/20 {
+  background-color: rgba(244, 180, 0, 0.18) !important;
+}
+
+.soft-ui .soft-page .border-blue-500\/50 {
+  border-color: rgba(244, 180, 0, 0.35) !important;
+}
+
+.soft-ui .soft-page .text-blue-400,
+.soft-ui .soft-page .text-cyan-400,
+.soft-ui .soft-page .text-purple-400 {
+  color: #6a6a6a !important;
+}
+
+.soft-ui [class*="rounded-"][class*="border"] {
+  backdrop-filter: blur(14px);
+}
+
+.soft-ui .recharts-cartesian-grid line {
+  stroke: rgba(120, 126, 133, 0.25) !important;
+}
+
+.soft-ui .recharts-text {
+  fill: #767676 !important;
+}
