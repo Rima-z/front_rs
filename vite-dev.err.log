@@ -1,0 +1,199 @@
+X [ERROR] No matching export in "node_modules/three/examples/jsm/utils/BufferGeometryUtils.js" for import "mergeBufferGeometries"
+
+    node_modules/web-ifc-three/IFCLoader.js:4:9:
+      4 │ import { mergeBufferGeometries } from 'three/examples/jsm/utils/Buf...
+        ╵          ~~~~~~~~~~~~~~~~~~~~~
+
+[2m17:28:02[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31merror while updating dependencies:
+Error: Build failed with 1 error:
+node_modules/web-ifc-three/IFCLoader.js:4:9: ERROR: No matching export in "node_modules/three/examples/jsm/utils/BufferGeometryUtils.js" for import "mergeBufferGeometries"
+    at failureErrorWithLog (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\esbuild\lib\main.js:926:25
+    at C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\esbuild\lib\main.js:1345:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+X [ERROR] No matching export in "node_modules/three/examples/jsm/utils/BufferGeometryUtils.js" for import "mergeBufferGeometries"
+
+    node_modules/web-ifc-three/IFCLoader.js:4:9:
+      4 │ import { mergeBufferGeometries } from 'three/examples/jsm/utils/Buf...
+        ╵          ~~~~~~~~~~~~~~~~~~~~~
+
+[2m17:28:04[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31merror while updating dependencies:
+Error: Build failed with 1 error:
+node_modules/web-ifc-three/IFCLoader.js:4:9: ERROR: No matching export in "node_modules/three/examples/jsm/utils/BufferGeometryUtils.js" for import "mergeBufferGeometries"
+    at failureErrorWithLog (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\esbuild\lib\main.js:926:25
+    at C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\esbuild\lib\main.js:1345:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+X [ERROR] No matching export in "node_modules/three/examples/jsm/utils/BufferGeometryUtils.js" for import "mergeBufferGeometries"
+
+    node_modules/web-ifc-three/IFCLoader.js:4:9:
+      4 │ import { mergeBufferGeometries } from 'three/examples/jsm/utils/Buf...
+        ╵          ~~~~~~~~~~~~~~~~~~~~~
+
+[2m17:29:21[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31merror while updating dependencies:
+Error: Build failed with 1 error:
+node_modules/web-ifc-three/IFCLoader.js:4:9: ERROR: No matching export in "node_modules/three/examples/jsm/utils/BufferGeometryUtils.js" for import "mergeBufferGeometries"
+    at failureErrorWithLog (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\esbuild\lib\main.js:926:25
+    at C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\esbuild\lib\main.js:1345:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+X [ERROR] No matching export in "node_modules/three/examples/jsm/utils/BufferGeometryUtils.js" for import "mergeBufferGeometries"
+
+    node_modules/web-ifc-three/IFCLoader.js:4:9:
+      4 │ import { mergeBufferGeometries } from 'three/examples/jsm/utils/Buf...
+        ╵          ~~~~~~~~~~~~~~~~~~~~~
+
+[2m17:29:29[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31merror while updating dependencies:
+Error: Build failed with 1 error:
+node_modules/web-ifc-three/IFCLoader.js:4:9: ERROR: No matching export in "node_modules/three/examples/jsm/utils/BufferGeometryUtils.js" for import "mergeBufferGeometries"
+    at failureErrorWithLog (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\esbuild\lib\main.js:926:25
+    at C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\esbuild\lib\main.js:1345:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+X [ERROR] No matching export in "node_modules/three/examples/jsm/utils/BufferGeometryUtils.js" for import "mergeBufferGeometries"
+
+    node_modules/web-ifc-three/IFCLoader.js:4:9:
+      4 │ import { mergeBufferGeometries } from 'three/examples/jsm/utils/Buf...
+        ╵          ~~~~~~~~~~~~~~~~~~~~~
+
+[2m17:30:07[22m [31m[1m[vite][22m[39m [31m[2m(client)[22m[39m [31merror while updating dependencies:
+Error: Build failed with 1 error:
+node_modules/web-ifc-three/IFCLoader.js:4:9: ERROR: No matching export in "node_modules/three/examples/jsm/utils/BufferGeometryUtils.js" for import "mergeBufferGeometries"
+    at failureErrorWithLog (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\esbuild\lib\main.js:1467:15)
+    at C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\esbuild\lib\main.js:926:25
+    at C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\esbuild\lib\main.js:1345:9
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)[39m
+[2m18:05:45[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\pc\Desktop\Smart Building Management App (1)\src\app\components\BuildingView.tsx: Identifier 'selectedExpressIds' has already been declared. (570:10)
+
+[0m [90m 568 |[31m       [33m:[31m [][33m;[31m
+ [90m 569 |[31m     [36mconst[31m selectedExpressIds [33m=[31m getExpressIdsForCandidates(spaceExpressIdMapRef[33m.[31mcurrent[33m,[31m selectedCandidates)[33m;[31m
+[31m[1m>[22m[31m[90m 570 |[31m     [36mconst[31m selectedExpressIds [33m=[31m getExpressIdsForCandidates(spaceExpressIdMapRef[33m.[31mcurrent[33m,[31m selectedCandidates)[33m;[31m
+ [90m     |[31m           [31m[1m^[22m[31m
+ [90m 571 |[31m
+ [90m 572 |[31m     ifcModel[33m.[31mifcManager[33m.[31mremoveSubset(ifcModel[33m.[31mmodelID[33m,[31m selectionMaterialRef[33m.[31mcurrent[33m,[31m [32m'selected-space'[31m)[33m;[31m
+ [90m 573 |[31m[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/pc/Desktop/Smart Building Management App (1)/src/app/components/BuildingView.tsx[39m:570:10
+[33m  568|        : [];
+  569|      const selectedExpressIds = getExpressIdsForCandidates(spaceExpressIdMapRef.current, selectedCandidates);
+  570|      const selectedExpressIds = getExpressIdsForCandidates(spaceExpressIdMapRef.current, selectedCandidates);
+     |            ^
+  571|  
+  572|      ifcModel.ifcManager.removeSubset(ifcModel.modelID, selectionMaterialRef.current, 'selected-space');[39m
+      at constructor (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:365:19)
+      at TypeScriptParserMixin.raise (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:6599:19)
+      at TypeScriptScopeHandler.checkRedeclarationInScope (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:1619:19)
+      at TypeScriptScopeHandler.declareName (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:1585:12)
+      at TypeScriptScopeHandler.declareName (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:4880:11)
+      at TypeScriptParserMixin.declareNameFromIdentifier (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:7567:16)
+      at TypeScriptParserMixin.checkIdentifier (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:7563:12)
+      at TypeScriptParserMixin.checkLVal (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:7500:12)
+      at TypeScriptParserMixin.parseVarId (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13412:10)
+      at TypeScriptParserMixin.parseVarId (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:9752:11)
+      at TypeScriptParserMixin.parseVar (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13383:12)
+      at TypeScriptParserMixin.parseVarStatement (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13230:10)
+      at TypeScriptParserMixin.parseVarStatement (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:9408:31)
+      at TypeScriptParserMixin.parseStatementContent (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12851:23)
+      at TypeScriptParserMixin.parseStatementContent (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:9508:18)
+      at TypeScriptParserMixin.parseStatementLike (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12767:17)
+      at TypeScriptParserMixin.parseStatementListItem (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12747:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13316:61)
+      at TypeScriptParserMixin.parseBlockBody (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13309:10)
+      at TypeScriptParserMixin.parseBlock (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13297:10)
+      at TypeScriptParserMixin.parseFunctionBody (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12100:24)
+      at TypeScriptParserMixin.parseArrowExpression (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12075:10)
+      at TypeScriptParserMixin.parseParenAndDistinguishExpression (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:11687:12)
+      at TypeScriptParserMixin.parseExprAtom (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:11331:23)
+      at TypeScriptParserMixin.parseExprAtom (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:4764:20)
+      at TypeScriptParserMixin.parseExprSubscripts (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:11081:23)
+      at TypeScriptParserMixin.parseUpdate (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:11066:21)
+      at TypeScriptParserMixin.parseMaybeUnary (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:11046:23)
+      at TypeScriptParserMixin.parseMaybeUnary (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:9837:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:10899:61)
+      at TypeScriptParserMixin.parseExprOps (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:10904:23)
+      at TypeScriptParserMixin.parseMaybeConditional (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:10881:23)
+      at TypeScriptParserMixin.parseMaybeAssign (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:10831:21)
+      at TypeScriptParserMixin.parseMaybeAssign (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:9786:20)
+      at C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:10800:39
+      at TypeScriptParserMixin.allowInAnd (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12426:12)
+      at TypeScriptParserMixin.parseMaybeAssignAllowIn (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:10800:17)
+      at TypeScriptParserMixin.parseMaybeAssignAllowInOrVoidPattern (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12493:17)
+      at TypeScriptParserMixin.parseExprListItem (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12175:18)
+      at TypeScriptParserMixin.parseCallExpressionArguments (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:11252:22)
+      at TypeScriptParserMixin.parseCoverCallAndAsyncArrowHead (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:11186:29)
+      at TypeScriptParserMixin.parseSubscript (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:11120:19)
+      at TypeScriptParserMixin.parseSubscript (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:9272:18)
+      at TypeScriptParserMixin.parseSubscripts (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:11094:19)
+      at TypeScriptParserMixin.parseExprSubscripts (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:11085:17)
+      at TypeScriptParserMixin.parseUpdate (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:11066:21)
+      at TypeScriptParserMixin.parseMaybeUnary (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:11046:23)
+      at TypeScriptParserMixin.parseMaybeUnary (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:9837:18)
+      at TypeScriptParserMixin.parseMaybeUnaryOrPrivate (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:10899:61)
+      at TypeScriptParserMixin.parseExprOps (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:10904:23)
+[2m18:15:48[22m [31m[1m[vite][22m[39m [31mInternal server error: C:\Users\pc\Desktop\Smart Building Management App (1)\src\app\components\BuildingView.tsx: Identifier 'roomsOnFloor' has already been declared. (669:9)
+
+[0m [90m 667 |[31m
+ [90m 668 |[31m [90m// Rooms on floor - include IFC candidates for selection[31m
+[31m[1m>[22m[31m[90m 669 |[31m    [36mconst[31m roomsOnFloor [33m=[31m useMemo(() [33m=>[31m {
+ [90m     |[31m          [31m[1m^[22m[31m
+ [90m 670 |[31m      [36mif[31m (spaceFloorMap[33m.[31mlength [33m===[31m [35m0[31m) [36mreturn[31m [33mArray[31m[33m.[31m[36mfrom[31m(rooms[33m.[31mvalues())[33m.[31mmap(r [33m=>[31m ({ [33m...[31mr[33m,[31m ifcCandidates[33m:[31m [r[33m.[31mroomName] }))[33m;[31m
+ [90m 671 |[31m      [36mconst[31m seen [33m=[31m [36mnew[31m [33mSet[31m[33m<[31m[33mstring[31m[33m>[31m()[33m;[31m
+ [90m 672 |[31m      [36mreturn[31m spaceFloorMap[0m[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/pc/Desktop/Smart Building Management App (1)/src/app/components/BuildingView.tsx[39m:669:9
+[33m  667|  
+  668|  // Rooms on floor - include IFC candidates for selection
+  669|     const roomsOnFloor = useMemo(() => {
+     |           ^
+  670|       if (spaceFloorMap.length === 0) return Array.from(rooms.values()).map(r => ({ ...r, ifcCandidates: [r.roomName] }));
+  671|       const seen = new Set<string>();[39m
+      at constructor (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:365:19)
+      at TypeScriptParserMixin.raise (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:6599:19)
+      at TypeScriptScopeHandler.checkRedeclarationInScope (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:1619:19)
+      at TypeScriptScopeHandler.declareName (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:1585:12)
+      at TypeScriptScopeHandler.declareName (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:4880:11)
+      at TypeScriptParserMixin.declareNameFromIdentifier (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:7567:16)
+      at TypeScriptParserMixin.checkIdentifier (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:7563:12)
+      at TypeScriptParserMixin.checkLVal (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:7500:12)
+      at TypeScriptParserMixin.parseVarId (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13412:10)
+      at TypeScriptParserMixin.parseVarId (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:9752:11)
+      at TypeScriptParserMixin.parseVar (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13383:12)
+      at TypeScriptParserMixin.parseVarStatement (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13230:10)
+      at TypeScriptParserMixin.parseVarStatement (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:9408:31)
+      at TypeScriptParserMixin.parseStatementContent (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12851:23)
+      at TypeScriptParserMixin.parseStatementContent (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:9508:18)
+      at TypeScriptParserMixin.parseStatementLike (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12767:17)
+      at TypeScriptParserMixin.parseStatementListItem (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12747:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13316:61)
+      at TypeScriptParserMixin.parseBlockBody (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13309:10)
+      at TypeScriptParserMixin.parseBlock (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13297:10)
+      at TypeScriptParserMixin.parseFunctionBody (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12100:24)
+      at TypeScriptParserMixin.parseFunctionBodyAndFinish (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12086:10)
+      at TypeScriptParserMixin.parseFunctionBodyAndFinish (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:9172:18)
+      at C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13445:12
+      at TypeScriptParserMixin.withSmartMixTopicForbiddingContext (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12403:14)
+      at TypeScriptParserMixin.parseFunction (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13444:10)
+      at TypeScriptParserMixin.parseFunctionStatement (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13125:17)
+      at TypeScriptParserMixin.parseStatementContent (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12791:21)
+      at TypeScriptParserMixin.parseStatementContent (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:9508:18)
+      at TypeScriptParserMixin.parseStatementLike (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12767:17)
+      at TypeScriptParserMixin.parseStatementListItem (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12747:17)
+      at TypeScriptParserMixin.parseExportDeclaration (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13934:17)
+      at TypeScriptParserMixin.parseExportDeclaration (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:9629:85)
+      at TypeScriptParserMixin.maybeParseExportDeclaration (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13893:31)
+      at TypeScriptParserMixin.parseExport (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13812:29)
+      at TypeScriptParserMixin.parseExport (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:9385:20)
+      at TypeScriptParserMixin.parseStatementContent (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12878:27)
+      at TypeScriptParserMixin.parseStatementContent (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:9508:18)
+      at TypeScriptParserMixin.parseStatementLike (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12767:17)
+      at TypeScriptParserMixin.parseModuleItem (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12744:17)
+      at TypeScriptParserMixin.parseBlockOrModuleBlockBody (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13316:36)
+      at TypeScriptParserMixin.parseBlockBody (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:13309:10)
+      at TypeScriptParserMixin.parseProgram (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12622:10)
+      at TypeScriptParserMixin.parseTopLevel (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:12612:25)
+      at TypeScriptParserMixin.parse (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:14488:25)
+      at TypeScriptParserMixin.parse (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:10126:18)
+      at parse (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\parser\lib\index.js:14522:38)
+      at parser (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\core\lib\parser\index.js:41:34)
+      at parser.next (<anonymous>)
+      at normalizeFile (C:\Users\pc\Desktop\Smart Building Management App (1)\node_modules\@babel\core\lib\transformation\normalize-file.js:64:37)

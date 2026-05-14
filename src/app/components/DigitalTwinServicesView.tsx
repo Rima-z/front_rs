@@ -518,40 +518,79 @@ function IoTSection({ onSensorsLoaded }: { onSensorsLoaded: (s: IoTSession, sens
 
       {/* Login form */}
       {showForm && !session && (
-        <div className="bg-zinc-800/40 border border-zinc-700/50 rounded-xl p-4 space-y-3">
-          <div>
-            <label className="block text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Email WaveOn</label>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-              placeholder="user@waveon.tn"
-              className="w-full bg-zinc-900/60 border border-zinc-700/60 rounded-lg px-3 py-2 text-sm text-white placeholder-zinc-600 outline-none focus:border-purple-500/50 transition-colors" />
-          </div>
-          <div>
-            <label className="block text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Mot de passe</label>
-            <div className="relative">
-              <input type={showPass ? 'text' : 'password'} value={password}
-                onChange={e => setPassword(e.target.value)}
-                onKeyDown={e => e.key === 'Enter' && handleConnect()}
-                placeholder="••••••••"
-                className="w-full bg-zinc-900/60 border border-zinc-700/60 rounded-lg px-3 py-2 pr-9 text-sm text-white placeholder-zinc-600 outline-none focus:border-purple-500/50 transition-colors" />
-              <button onClick={() => setShowPass(v => !v)}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-zinc-500 hover:text-zinc-300">
-                {showPass ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-              </button>
-            </div>
-          </div>
-          <div className="flex gap-2">
-            <button onClick={handleConnect} disabled={loading}
-              className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-purple-500 hover:bg-purple-600 text-white text-sm transition-all disabled:opacity-40">
-              {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plug className="w-4 h-4" />}
-              {loading ? 'Connexion…' : 'Se connecter'}
-            </button>
-            <button onClick={() => { setShowForm(false); setError(null); }}
-              className="px-3 py-2 rounded-lg bg-zinc-700/50 text-zinc-400 hover:text-white text-sm transition-all">
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
+  <div className="bg-white border border-gray-300 rounded-xl p-4 space-y-3 shadow-sm">
+    
+    <div>
+      <label className="block text-[10px] text-gray-500 uppercase tracking-widest mb-1">
+        Email WaveOn
+      </label>
+
+      <input
+        type="email"
+        value={email}
+        onChange={e => setEmail(e.target.value)}
+        placeholder="user@waveon.tn"
+        className="w-full bg-gray-100 border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-gray-500 transition-colors"
+      />
+    </div>
+
+    <div>
+      <label className="block text-[10px] text-gray-500 uppercase tracking-widest mb-1">
+        Mot de passe
+      </label>
+
+      <div className="relative">
+        <input
+          type={showPass ? 'text' : 'password'}
+          value={password}
+          onChange={e => setPassword(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && handleConnect()}
+          placeholder="••••••••"
+          className="w-full bg-gray-100 border border-gray-300 rounded-lg px-3 py-2 pr-9 text-sm text-gray-900 placeholder-gray-400 outline-none focus:border-gray-500 transition-colors"
+        />
+
+        <button
+          onClick={() => setShowPass(v => !v)}
+          className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+        >
+          {showPass ? (
+            <EyeOff className="w-3.5 h-3.5" />
+          ) : (
+            <Eye className="w-3.5 h-3.5" />
+          )}
+        </button>
+      </div>
+    </div>
+
+    <div className="flex gap-2">
+      {/* bouton principal inchangé */}
+      <button
+        onClick={handleConnect}
+        disabled={loading}
+        className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg bg-purple-500 hover:bg-purple-600 text-white text-sm transition-all disabled:opacity-40"
+      >
+        {loading ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : (
+          <Plug className="w-4 h-4" />
+        )}
+
+        {loading ? 'Connexion…' : 'Se connecter'}
+      </button>
+
+      <button
+        onClick={() => {
+          setShowForm(false);
+          setError(null);
+        }}
+        className="px-3 py-2 rounded-lg bg-gray-200 text-gray-600 hover:text-gray-900 hover:bg-gray-300 text-sm transition-all"
+      >
+        <X className="w-4 h-4" />
+      </button>
+    </div>
+
+  </div>
+)}
 
       {/* Actions */}
       <div className="space-y-2">
@@ -583,26 +622,47 @@ function IoTSection({ onSensorsLoaded }: { onSensorsLoaded: (s: IoTSession, sens
         )}
 
         {/* Sensor list */}
-        {session && sensors.length > 0 && (
-          <div className="space-y-1.5 max-h-56 overflow-y-auto pr-0.5">
-            <p className="text-[10px] text-zinc-500 uppercase tracking-widest px-0.5">
-              {sensors.length} équipements détectés
-            </p>
-            {sensors.map(s => (
-              <div key={s.id} className="flex items-center gap-2.5 bg-zinc-800/40 border border-zinc-700/40 rounded-xl px-3 py-2.5">
-                <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${sensorDot(s.sensor_types)}`} />
-                <div className="flex-1 min-w-0">
-                  <p className="text-xs text-zinc-300 truncate font-medium">{s.device_name}</p>
-                  <div className="flex gap-1 mt-0.5 flex-wrap">
-                    {s.sensor_types.slice(0, 2).map(t => <SensorPill key={t} type={t} />)}
-                  </div>
-                </div>
-                <span className="text-[10px] font-mono text-zinc-600 flex-shrink-0">{s.unicast}</span>
-              </div>
+{session && sensors.length > 0 && (
+  <div className="space-y-1.5 max-h-56 overflow-y-auto pr-0.5">
+    
+    <p className="text-[10px] text-gray-500 uppercase tracking-widest px-0.5">
+      {sensors.length} équipements détectés
+    </p>
+
+    {sensors.map(s => (
+      <div
+        key={s.id}
+        className="flex items-center gap-2.5 bg-white border border-gray-300 rounded-xl px-3 py-2.5 shadow-sm"
+      >
+        
+        {/* point vert */}
+        <div
+          className={`w-2 h-2 rounded-full flex-shrink-0 ${
+            s.sensor_types?.length
+              ? 'bg-green-500 shadow-[0_0_6px_rgba(34,197,94,0.7)]'
+              : 'bg-gray-400'
+          }`}
+        />
+
+        <div className="flex-1 min-w-0">
+          <p className="text-xs text-gray-900 truncate font-medium">
+            {s.device_name}
+          </p>
+
+          <div className="flex gap-1 mt-0.5 flex-wrap">
+            {s.sensor_types.slice(0, 2).map(t => (
+              <SensorPill key={t} type={t} />
             ))}
           </div>
-        )}
+        </div>
 
+        <span className="text-[10px] font-mono text-gray-500 flex-shrink-0">
+          {s.unicast}
+        </span>
+      </div>
+    ))}
+  </div>
+)}
         {session && sensors.length === 0 && !fetching && (
           <p className="text-center text-xs text-zinc-600 py-4">Aucun équipement trouvé.</p>
         )}
@@ -731,15 +791,23 @@ function MappingSection({
 
       {/* View toggle */}
       <div className="flex gap-1 bg-zinc-900/50 border border-zinc-800/50 rounded-xl p-1">
-        {(['create', 'list'] as const).map(v => (
-          <button key={v} onClick={() => { setView(v); if (v === 'list') handleLoadMappings(); }}
-            className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-all ${
-              view === v ? 'bg-zinc-800 text-white border border-zinc-700/50' : 'text-zinc-500 hover:text-zinc-300'
-            }`}>
-            {v === 'create' ? '+ Nouveau mapping' : '📋 Voir les mappings'}
-          </button>
-        ))}
-      </div>
+  {(['create', 'list'] as const).map(v => (
+    <button
+      key={v}
+      onClick={() => {
+        setView(v);
+        if (v === 'list') handleLoadMappings();
+      }}
+      className={`flex-1 py-1.5 rounded-lg text-xs font-medium transition-all ${
+        view === v
+          ? 'bg-yellow-400 text-black border border-yellow-300 shadow-sm'
+          : 'text-zinc-500 hover:text-zinc-300'
+      }`}
+    >
+      {v === 'create' ? '+ Nouveau mapping' : '📋 Voir les mappings'}
+    </button>
+  ))}
+</div>
 
       {/* CREATE */}
       {view === 'create' && (

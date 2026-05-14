@@ -14,11 +14,17 @@ export default defineConfig({
     alias: {
       // Alias @ to the src directory
       '@': path.resolve(__dirname, './src'),
+      'three/examples/jsm/utils/BufferGeometryUtils': path.resolve(__dirname, './src/lib/BufferGeometryUtilsCompat.ts'),
+      'three/examples/jsm/utils/BufferGeometryUtils.js': path.resolve(__dirname, './src/lib/BufferGeometryUtilsCompat.ts'),
     },
   },
   define: {
   global: "window",
 },
+
+  optimizeDeps: {
+    exclude: ['web-ifc-three'],
+  },
 
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
   assetsInclude: ['**/*.svg', '**/*.csv'],

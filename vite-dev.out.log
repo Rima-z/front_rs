@@ -1,0 +1,84 @@
+
+> @figma/my-make-file@0.0.1 dev
+> vite --host 127.0.0.1
+
+
+  [32m[1mVITE[22m v6.3.5[39m  [2mready in [0m[1m840[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5173[22m/[39m
+[2m17:08:00[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:08:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:08:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:08:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:08:57[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:09:06[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:09:11[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:09:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:09:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:09:59[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:16:46[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:17:01[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:17:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:17:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:17:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:26:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:26:30[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:26:45[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:27:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:27:46[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:29:20[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:29:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:30:06[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m17:31:42[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
+[2m17:31:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m Re-optimizing dependencies because vite config has changed
+[2m17:31:42[22m [36m[1m[vite][22m[39m server restarted.
+[2m17:32:20[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2msrc/lib/BufferGeometryUtilsCompat.ts[22m
+[2m17:32:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:32:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:32:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:34:01[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/C:\Users\pc\Desktop\Smart Building Management App (1)\src\app\components\BuildingView.tsx, /src/styles/index.css[22m
+[2m17:34:33[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:34:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:34:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:35:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/C:\Users\pc\Desktop\Smart Building Management App (1)\src\app\components\BuildingView.tsx, /src/styles/index.css[22m
+[2m17:39:18[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/C:\Users\pc\Desktop\Smart Building Management App (1)\src\app\components\BuildingView.tsx, /src/styles/index.css[22m
+[2m17:41:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/C:\Users\pc\Desktop\Smart Building Management App (1)\src\app\components\BuildingView.tsx, /src/styles/index.css[22m
+[2m17:42:13[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/C:\Users\pc\Desktop\Smart Building Management App (1)\src\app\components\BuildingView.tsx, /src/styles/index.css[22m
+[2m17:43:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/C:\Users\pc\Desktop\Smart Building Management App (1)\src\app\components\BuildingView.tsx, /src/styles/index.css[22m
+[2m17:43:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/C:\Users\pc\Desktop\Smart Building Management App (1)\src\app\components\BuildingView.tsx, /src/styles/index.css[22m
+[2m17:44:31[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:44:40[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:45:05[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/@fs/C:\Users\pc\Desktop\Smart Building Management App (1)\src\app\components\BuildingView.tsx, /src/styles/index.css[22m
+[2m17:48:08[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
+[2m17:48:08[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m Re-optimizing dependencies because vite config has changed
+[2m17:48:08[22m [36m[1m[vite][22m[39m server restarted.
+[2m17:49:09[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:49:16[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:49:16[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mpage reload [39m[2mdist/index.html[22m
+[2m17:59:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:00:39[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:05:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:06:10[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:06:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:07:54[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:09:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:10:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:10:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:13:21[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:14:14[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:15:47[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:17:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:18:45[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:20:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:23:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:28:42[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:29:26[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:30:34[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:31:38[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:33:27[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m18:51:55[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m19:04:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m19:05:12[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m19:05:48[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m19:06:41[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m
+[2m19:07:24[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/app/components/BuildingView.tsx, /src/styles/index.css[22m

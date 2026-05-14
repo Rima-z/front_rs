@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { useRealtimeData } from "../../hooks/useRealtimeData";
 
-export default function DashboardView() {
+type DashboardViewProps = {
+  onOpenRoom?: (roomName: string) => void;
+};
+
+export default function DashboardView({ onOpenRoom }: DashboardViewProps) {
   const { latest, history, connected } = useRealtimeData(100);
 
   return (
@@ -19,13 +23,18 @@ export default function DashboardView() {
       {/* Dernières valeurs par capteur */}
       <div className="grid grid-cols-3 gap-4">
         {latest.map((sensor) => (
-          <div key={sensor.sensorId} className="border rounded-lg p-4">
+          <button
+            key={sensor.sensorId}
+            type="button"
+            onClick={() => onOpenRoom?.(sensor.roomName)}
+            className="border rounded-lg p-4 text-left"
+          >
             <p className="text-sm text-muted-foreground">{sensor.label}</p>
             <p className="text-2xl font-bold">
               {sensor.value} {sensor.unit}
             </p>
             <p className="text-xs text-muted-foreground">{sensor.roomName}</p>
-          </div>
+          </button>
         ))}
       </div>
 
