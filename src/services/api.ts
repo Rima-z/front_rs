@@ -26,6 +26,40 @@ export type AlertDto = {
   resolvedAt: string | null;
 };
 
+export type AnomalySeverity = 'critical' | 'high' | 'medium' | 'low';
+
+export type AnomalyDto = {
+  id: number;
+  sensor_id: string;
+  sensor_type: string;
+  room_name: string;
+  anomaly_type: string;
+  severity: AnomalySeverity;
+  value: number | null;
+  z_score: number | null;
+  detail: string | null;
+  action: string | null;
+  detected_at: string;
+  acknowledged: boolean;
+  notified: boolean;
+};
+
+export type AnomalyCountsDto = {
+  total: number;
+  critical: number;
+  high: number;
+  medium: number;
+  low: number;
+  unacked: number;
+};
+
+export type GetAnomaliesParams = {
+  limit?: number;
+  severity?: AnomalySeverity | 'all';
+  room?: string;
+  unacked?: boolean;
+};
+
 // ─── Types Spring Boot ────────────────────────────────────────────────────────
 
 export type SensorMeasurement = {
@@ -217,27 +251,31 @@ async function get<T>(path: string): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-async function apiFetch<T = any>(
-url: string,
-options?: RequestInit,
-): Promise<T> {
-const res = await fetch(url, options);
-if (!res.ok) {
-let detail = `Erreur ${res.status}`;
-try {
-detail = (await res.json()).detail ?? detail;
-} catch {}
-throw new Error(detail);
-}
-const text = await res.text();
-return text
-? JSON.parse(text)
-: (undefined as T);
+async function apiFetch<T = any>(url: string, options?: RequestInit): Promise<T> {
+  const res = await fetch(url, options);
+  if (!res.ok) {
+    let detail = `Erreur ${res.status}`;
+    try { detail = (await res.json()).detail ?? detail; } catch {}
+    throw new Error(detail);
+  }
+  const text = await res.text();
+  return text ? JSON.parse(text) : (undefined as T);
 }
 
+// ─── Helpers anomaly-service (port 8085) ──────────────────────────────────────
 
+async function anomalyGet<T>(path: string): Promise<T> {
+  const res = await fetch(`${ALERT_URL}${path}`);
+  if (!res.ok) throw new Error(`Anomaly API error ${res.status} on ${path}`);
+  return res.json() as Promise<T>;
+}
 
-
+async function anomalyPut<T>(path: string): Promise<T> {
+  const res = await fetch(`${ALERT_URL}${path}`, { method: 'PUT' });
+  if (!res.ok) throw new Error(`Anomaly API error ${res.status} on ${path}`);
+  const text = await res.text();
+  return text ? JSON.parse(text) : (undefined as T);
+}
 
 // ─── Endpoints Spring Boot ────────────────────────────────────────────────────
 
@@ -269,7 +307,7 @@ export const getSensorsByZone = (zoneId: number): Promise<SensorMeasurement[]> =
 export const getSpaces = (): Promise<SpaceSensorDto[]> =>
   get('/api/spaces');
 
-// ─── Alert Endpoints ──────────────────────────────────────────────────────────
+// ─── Alert Endpoints (ancien service :8085 — gardé pour compatibilité) ────────
 
 async function alertGet<T>(path: string): Promise<T> {
   const res = await fetch(`${ALERT_URL}${path}`);
@@ -298,9 +336,40 @@ export const acknowledgeAlert = (id: number): Promise<AlertDto> =>
 export const resolveAlert = (id: number): Promise<AlertDto> =>
   alertPut(`/api/alerts/${id}/resolve`);
 
+// ─── Anomaly-service Endpoints (anomaly-service Python :8085) ─────────────────
+
+/**
+ * GET /anomalies
+ * Récupère la liste des anomalies filtrées depuis anomaly-service.
+ */
+export function getAnomalies(params: GetAnomaliesParams = {}): Promise<AnomalyDto[]> {
+  const query = new URLSearchParams();
+  query.set('limit', String(params.limit ?? 50));
+  if (params.severity && params.severity !== 'all') query.set('severity', params.severity);
+  if (params.room)    query.set('room',   params.room);
+  if (params.unacked) query.set('unacked', 'true');
+
+  return anomalyGet<AnomalyDto[]>(`/anomalies?${query.toString()}`);
+}
+
+/**
+ * GET /anomalies/counts
+ * Retourne les compteurs par sévérité pour le dashboard.
+ */
+export function getAnomalyCounts(): Promise<AnomalyCountsDto> {
+  return anomalyGet<AnomalyCountsDto>('/anomalies/counts');
+}
+
+/**
+ * PUT /anomalies/{id}/acknowledge
+ * Acquitte une anomalie (acknowledged = true en base).
+ */
+export function acknowledgeAnomaly(id: number): Promise<AnomalyDto> {
+  return anomalyPut<AnomalyDto>(`/anomalies/${id}/acknowledge`);
+}
+
 // ─── IFC Parser Endpoints (:8001) ─────────────────────────────────────────────
 
-/** Upload un fichier .ifc et retourne la hiérarchie parsée + session_id */
 export async function uploadIFC(file: File): Promise<IFCParseResult> {
   const form = new FormData();
   form.append('file', file);
@@ -310,29 +379,19 @@ export async function uploadIFC(file: File): Promise<IFCParseResult> {
   });
 }
 
-/** Liste des espaces d'une session IFC parsée */
 export async function getIFCSpaces(sessionId: string): Promise<IFCSpace[]> {
-  const data = await apiFetch<{ spaces: IFCSpace[] }>(
-    `${IFC_URL}/api/ifc/spaces/${sessionId}`
-  );
+  const data = await apiFetch<{ spaces: IFCSpace[] }>(`${IFC_URL}/api/ifc/spaces/${sessionId}`);
   return data.spaces;
 }
 
-/** Hiérarchie complète d'une session IFC */
 export async function getIFCHierarchy(sessionId: string): Promise<IFCHierarchy> {
-  const data = await apiFetch<{ hierarchy: IFCHierarchy }>(
-    `${IFC_URL}/api/ifc/hierarchy/${sessionId}`
-  );
+  const data = await apiFetch<{ hierarchy: IFCHierarchy }>(`${IFC_URL}/api/ifc/hierarchy/${sessionId}`);
   return data.hierarchy;
 }
 
 // ─── IoT Connector Endpoints (:8002) ──────────────────────────────────────────
 
-/** Authentification WaveOn — retourne session_id */
-export async function connectIoT(
-  email: string,
-  password: string,
-): Promise<IoTSession> {
+export async function connectIoT(email: string, password: string): Promise<IoTSession> {
   return apiFetch<IoTSession>(`${IOT_URL}/api/iot/connect`, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -340,10 +399,7 @@ export async function connectIoT(
   });
 }
 
-/** Tous les équipements IoT (BLE + SmartControllers) normalisés */
-/** Tous les équipements IoT (BLE + SmartControllers) normalisés */
 export async function getAllDevices(sessionId: string): Promise<IoTSensor[]> {
-
   const data = await apiFetch<{
     sensors: Array<{
       id_ble_node?: number;
@@ -354,7 +410,6 @@ export async function getAllDevices(sessionId: string): Promise<IoTSensor[]> {
       pid_label?: string;
       enabled?: boolean;
     }>;
-
     smart_controllers: Array<{
       id_network?: number;
       id_smart_controller?: number;
@@ -366,79 +421,38 @@ export async function getAllDevices(sessionId: string): Promise<IoTSensor[]> {
     }>;
   }>(`${IOT_URL}/api/iot/devices/${sessionId}`);
 
-  // ─────────────────────────────
-  // BLE SENSORS
-  // ─────────────────────────────
-
   const ble: IoTSensor[] = (data.sensors ?? []).map(s => ({
-    id: String(s.id_ble_node ?? crypto.randomUUID()),
-
-    sensor_type: 'ble_node',
-
-    device_name: s.name,
-
-    unicast: s.unicast_hex,
-
-    network_id: s.network_id,
-
+    id:           String(s.id_ble_node ?? crypto.randomUUID()),
+    sensor_type:  'ble_node',
+    device_name:  s.name,
+    unicast:      s.unicast_hex,
+    network_id:   s.network_id,
     sensor_types: s.sensor_types ?? [],
-
-    pid_label: s.pid_label,
-
-    enabled: s.enabled ?? true,
+    pid_label:    s.pid_label,
+    enabled:      s.enabled ?? true,
   }));
-
-  // ─────────────────────────────
-  // SMART CONTROLLERS
-  // ─────────────────────────────
 
   const sc: IoTSensor[] = (data.smart_controllers ?? []).map(c => ({
-
-    id: String(c.id_smart_controller ?? crypto.randomUUID()),
-
-    sensor_type: 'smart_controller',
-
-    device_name: c.name,
-
-    unicast:
-      c.unicast !== undefined
-        ? `0x${c.unicast.toString(16).toUpperCase()}`
-        : undefined,
-
-    // ✅ CORRECTION
-    network_id: c.id_network,
-
-    // ✅ CORRECTION IMPORTANTE
-    sensor_types:
-      c.variables?.length
-        ? c.variables
-        : (c.product_name
-            ? [c.product_name]
-            : ['Comptage énergie/eau']),
-
-    enabled: c.enabled ?? true,
+    id:           String(c.id_smart_controller ?? crypto.randomUUID()),
+    sensor_type:  'smart_controller',
+    device_name:  c.name,
+    unicast:      c.unicast !== undefined ? `0x${c.unicast.toString(16).toUpperCase()}` : undefined,
+    network_id:   c.id_network,
+    sensor_types: c.variables?.length
+      ? c.variables
+      : (c.product_name ? [c.product_name] : ['Comptage énergie/eau']),
+    enabled:      c.enabled ?? true,
   }));
 
-  // ─────────────────────────────
-  // MERGE
-  // ─────────────────────────────
-
-  return [
-    ...ble,
-    ...sc,
-  ];
+  return [...ble, ...sc];
 }
 
-/** Déconnecte une session IoT */
 export async function disconnectIoT(sessionId: string): Promise<void> {
-await apiFetch<void>(`${IOT_URL}/api/iot/sessions/${sessionId}`, {
-method: 'DELETE',
-});
+  await apiFetch<void>(`${IOT_URL}/api/iot/sessions/${sessionId}`, { method: 'DELETE' });
 }
 
 // ─── Mapping Endpoints (:8003) ────────────────────────────────────────────────
 
-/** Crée un mapping salle ↔ capteurs */
 export async function createMapping(data: MappingCreate): Promise<MappingEntry> {
   return apiFetch<MappingEntry>(`${MAPPING_URL}/api/mapping/`, {
     method:  'POST',
@@ -447,7 +461,6 @@ export async function createMapping(data: MappingCreate): Promise<MappingEntry> 
   });
 }
 
-/** Tous les mappings enregistrés (avec reconstruction de sensor_types) */
 export async function getAllMappings(): Promise<MappingEntry[]> {
   const data = await apiFetch<MappingEntry[]>(`${MAPPING_URL}/api/mapping/`);
   return data.map(m => ({
@@ -457,33 +470,25 @@ export async function getAllMappings(): Promise<MappingEntry[]> {
       sensor_types: s.sensor_types?.length
         ? s.sensor_types
         : ((s as any).sensor_types_str as string | undefined)
-            ?.split(',')
-            .filter(Boolean) ?? [],
+            ?.split(',').filter(Boolean) ?? [],
     })),
   }));
 }
 
-/** Supprime un mapping par son ID */
 export async function deleteMappingById(id: number): Promise<void> {
-await apiFetch<void>(`${MAPPING_URL}/api/mapping/${id}`, {
-method: 'DELETE',
-});
+  await apiFetch<void>(`${MAPPING_URL}/api/mapping/${id}`, { method: 'DELETE' });
 }
 
-
-/** Exporte tous les mappings en JSON (blob téléchargeable) */
 export async function exportMappingJSON(): Promise<Blob> {
   const res = await fetch(`${MAPPING_URL}/api/mapping/export/json`);
   if (!res.ok) throw new Error(`Export échoué : ${res.status}`);
   return res.blob();
 }
 
-/** Statistiques globales du mapping */
 export async function getMappingStats(): Promise<MappingStats> {
   return apiFetch<MappingStats>(`${MAPPING_URL}/api/mapping/stats/summary`);
 }
 
-/** Import en masse de mappings (migration depuis notebook etape3) */
 export async function bulkImportMappings(payload: {
   project_name?: string;
   ifc_filename?: string;

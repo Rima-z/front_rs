@@ -11,6 +11,7 @@ import {
   CalendarClock,
   DoorOpen,
   Network,
+  TriangleAlert,
 } from 'lucide-react';
 import { getRoles, logout, isMaintenanceOnly } from '../../utils/auth';
 
@@ -40,6 +41,7 @@ const ALL_MENU_ITEMS: MenuItem[] = [
   { id: 'digitalTwin', icon: Network, label: 'Digital Twin', allowedRoles: [] },
 
   { id: 'alerts',      icon: Bell,            label: 'Alerts',      allowedRoles: [] }, // visible to all
+  { id: 'alerts-anomalies', icon: TriangleAlert, label: 'Anomalies', allowedRoles: [] },
   { id: 'analytics',   icon: BarChart3,       label: 'Analytics',   allowedRoles: [] },
 ];
 

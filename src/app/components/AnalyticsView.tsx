@@ -62,18 +62,70 @@ function groupByMonth(measurements: SensorMeasurement[]): MonthlyData[] {
   return Object.values(map).slice(-6);
 }
 
+interface DailyData {
+  day: string;
+  energy: number;
+}
+
+function groupByDay(measurements: SensorMeasurement[]): DailyData[] {
+  const map: Record<string, number> = {};
+
+  measurements.forEach(m => {
+    if (
+      m.value == null ||
+      m.sensorType?.toLowerCase() !== 'energy'
+    ) return;
+
+    const d = new Date(m.measuredAt || m.timestamp);
+
+    const key = d.toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: '2-digit',
+    });
+
+    if (!map[key]) map[key] = 0;
+
+    map[key] += m.value;
+  });
+
+  return Object.entries(map)
+    .map(([day, energy]) => ({
+      day,
+      energy: +energy.toFixed(2),
+    }))
+    .sort((a, b) => {
+      const [da, ma] = a.day.split('/');
+      const [db, mb] = b.day.split('/');
+
+      return (
+        new Date(2025, Number(ma) - 1, Number(da)).getTime() -
+        new Date(2025, Number(mb) - 1, Number(db)).getTime()
+      );
+    });
+}
+
 function groupByHour(measurements: SensorMeasurement[]): HourlyData[] {
-  const map: Record<string, { value: number; count: number }> = {};
+  const map: Record<string, { total: number; count: number }> = {};
+
   measurements.forEach(m => {
     if (m.value == null) return;
+
     const d = new Date(m.measuredAt || m.timestamp);
-    const key = `${String(d.getHours()).padStart(2, '0')}h`;
-    if (!map[key]) map[key] = { value: 0, count: 0 };
-    map[key].value += m.value;
-    map[key].count++;
+    const hour = d.getHours().toString().padStart(2, '0') + ':00';
+
+    if (!map[hour]) {
+      map[hour] = { total: 0, count: 0 };
+    }
+
+    map[hour].total += m.value;
+    map[hour].count++;
   });
+
   return Object.entries(map)
-    .map(([hour, g]) => ({ hour, avg: +(g.value / g.count).toFixed(2) }))
+    .map(([hour, v]) => ({
+      hour,
+      avg: +(v.total / v.count).toFixed(2),
+    }))
     .sort((a, b) => a.hour.localeCompare(b.hour));
 }
 
@@ -442,55 +494,145 @@ function DateRangePicker({ range, preset, onPresetChange, onRangeChange }: {
     : PRESET_LABELS[preset];
 
   return (
-    <div className="relative" ref={ref}>
-      <button onClick={() => setOpen(o => !o)}
-        className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-zinc-100 border border-zinc-200 text-zinc-900 rounded-xl text-sm transition-all">
-        <Calendar className="w-4 h-4 text-blue-500 flex-shrink-0" />
-        <span className="max-w-44 truncate">{label}</span>
-        <ChevronDown className={`w-4 h-4 text-zinc-400 transition-transform ${open ? 'rotate-180' : ''}`} />
-      </button>
+  <div className="relative" ref={ref}>
+    <button
+      onClick={() => setOpen(o => !o)}
+      className="flex items-center gap-2 px-4 py-2 bg-white hover:bg-zinc-100 border border-zinc-200 text-zinc-900 rounded-xl text-sm transition-all"
+    >
+      <Calendar className="w-4 h-4 text-blue-500 flex-shrink-0" />
+      <span className="max-w-44 truncate">{label}</span>
+      <ChevronDown
+        className={`w-4 h-4 text-zinc-400 transition-transform ${open ? 'rotate-180' : ''}`}
+      />
+    </button>
 
-      {open && (
-        <div className="absolute z-50 top-full mt-2 right-0 bg-zinc-900 border border-zinc-700/60 rounded-2xl shadow-2xl overflow-hidden w-max">
-          <div className="flex border-b border-zinc-800">
-            {(['1w', '1m', '3m'] as PeriodPreset[]).map(p => (
-              <button key={p} onClick={() => { onPresetChange(p); onRangeChange(getRangeForPreset(p)); setOpen(false); }}
-                className={`flex-1 px-4 py-2.5 text-xs font-semibold transition-colors ${preset === p ? 'text-blue-400 bg-blue-500/10 border-b-2 border-blue-500' : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'}`}>
-                {PRESET_LABELS[p]}
-              </button>
-            ))}
-            <button onClick={() => setSelecting('from')}
-              className={`flex-1 px-4 py-2.5 text-xs font-semibold transition-colors ${preset === 'custom' ? 'text-blue-400 bg-blue-500/10 border-b-2 border-blue-500' : 'text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800'}`}>
-              Personnalise
+    {open && (
+      <div className="absolute z-50 top-full mt-2 right-0 bg-white border border-zinc-200 rounded-2xl shadow-2xl overflow-hidden w-max">
+        
+        <div className="flex border-b border-zinc-200">
+          {(['1w', '1m', '3m'] as PeriodPreset[]).map(p => (
+            <button
+              key={p}
+              onClick={() => {
+                onPresetChange(p);
+                onRangeChange(getRangeForPreset(p));
+                setOpen(false);
+              }}
+              className={`flex-1 px-4 py-2.5 text-xs font-semibold transition-colors ${
+                preset === p
+                  ? 'text-blue-600 bg-blue-50 border-b-2 border-blue-500'
+                  : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
+              }`}
+            >
+              {PRESET_LABELS[p]}
             </button>
-          </div>
-          <div className="p-5">
-            <div className="flex gap-8">
-              <MiniCalendar label={selecting === 'from' ? '📅 Date de debut (selection)' : '✅ Date de debut'} value={tempFrom} rangeStart={tempFrom} rangeEnd={selecting === 'to' ? null : tempTo} onSelect={handleDaySelect} />
-              <div className="w-px bg-zinc-800 self-stretch" />
-              <MiniCalendar label={selecting === 'to' ? '📅 Date de fin (selection)' : '✅ Date de fin'} value={tempTo} rangeStart={tempFrom} rangeEnd={tempTo} onSelect={handleDaySelect} />
-            </div>
-            <div className="mt-4 p-3 bg-zinc-800/60 rounded-xl border border-zinc-700/40 flex items-center justify-between gap-4">
-              <div className="text-xs text-zinc-400 flex items-center gap-2">
-                <span className={`w-2 h-2 rounded-full ${selecting === 'from' ? 'bg-blue-400 animate-pulse' : 'bg-zinc-600'}`} />
-                <span className="font-medium text-white">{formatDateLabel(tempFrom)}</span>
-                <span className="text-zinc-600">→</span>
-                <span className={`w-2 h-2 rounded-full ${selecting === 'to' ? 'bg-blue-400 animate-pulse' : 'bg-zinc-600'}`} />
-                <span className="font-medium text-white">{formatDateLabel(tempTo)}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <button onClick={() => { setTempFrom(range.from); setTempTo(range.to); setSelecting('from'); }} className="px-3 py-1.5 text-xs text-zinc-500 hover:text-zinc-300 transition-colors">Reinitialiser</button>
-                <button onClick={() => { onPresetChange('custom'); onRangeChange({ from: tempFrom, to: tempTo }); setOpen(false); }} className="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition-colors">Appliquer</button>
-              </div>
-            </div>
-            <p className="text-center text-zinc-700 text-[10px] mt-2">
-              {selecting === 'from' ? 'Cliquez pour choisir la date de debut' : 'Cliquez maintenant pour choisir la date de fin'}
-            </p>
-          </div>
+          ))}
+
+          <button
+            onClick={() => setSelecting('from')}
+            className={`flex-1 px-4 py-2.5 text-xs font-semibold transition-colors ${
+              preset === 'custom'
+                ? 'text-blue-600 bg-blue-50 border-b-2 border-blue-500'
+                : 'text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100'
+            }`}
+          >
+            Personnalise
+          </button>
         </div>
-      )}
-    </div>
-  );
+
+        <div className="p-5 bg-white">
+          <div className="flex gap-8">
+            <MiniCalendar
+              label={
+                selecting === 'from'
+                  ? '📅 Date de debut (selection)'
+                  : '✅ Date de debut'
+              }
+              value={tempFrom}
+              rangeStart={tempFrom}
+              rangeEnd={selecting === 'to' ? null : tempTo}
+              onSelect={handleDaySelect}
+            />
+
+            <div className="w-px bg-zinc-200 self-stretch" />
+
+            <MiniCalendar
+              label={
+                selecting === 'to'
+                  ? '📅 Date de fin (selection)'
+                  : '✅ Date de fin'
+              }
+              value={tempTo}
+              rangeStart={tempFrom}
+              rangeEnd={tempTo}
+              onSelect={handleDaySelect}
+            />
+          </div>
+
+          <div className="mt-4 p-3 bg-white rounded-xl border border-zinc-200 flex items-center justify-between gap-4 shadow-sm">
+            <div className="text-xs text-zinc-600 flex items-center gap-2">
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  selecting === 'from'
+                    ? 'bg-blue-500 animate-pulse'
+                    : 'bg-zinc-400'
+                }`}
+              />
+
+              <span className="font-medium text-zinc-900">
+                {formatDateLabel(tempFrom)}
+              </span>
+
+              <span className="text-zinc-400">→</span>
+
+              <span
+                className={`w-2 h-2 rounded-full ${
+                  selecting === 'to'
+                    ? 'bg-blue-500 animate-pulse'
+                    : 'bg-zinc-400'
+                }`}
+              />
+
+              <span className="font-medium text-zinc-900">
+                {formatDateLabel(tempTo)}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => {
+                  setTempFrom(range.from);
+                  setTempTo(range.to);
+                  setSelecting('from');
+                }}
+                className="px-3 py-1.5 text-xs text-zinc-600 hover:text-zinc-900 transition-colors"
+              >
+                Reinitialiser
+              </button>
+
+              <button
+                onClick={() => {
+                  onPresetChange('custom');
+                  onRangeChange({ from: tempFrom, to: tempTo });
+                  setOpen(false);
+                }}
+                className="px-4 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold rounded-lg transition-colors"
+              >
+                Appliquer
+              </button>
+            </div>
+          </div>
+
+          <p className="text-center text-zinc-500 text-[10px] mt-2">
+            {selecting === 'from'
+              ? 'Cliquez pour choisir la date de debut'
+              : 'Cliquez maintenant pour choisir la date de fin'}
+          </p>
+        </div>
+      </div>
+    )}
+  </div>
+);
 }
 
 // ─── Main Component ───────────────────────────────────────────────────────────
@@ -550,6 +692,7 @@ export function AnalyticsView() {
   const avgValue = filtered.length ? +(filtered.reduce((s, m) => s + (m.value ?? 0), 0) / filtered.length).toFixed(2) : 0;
 
   const monthlyData = groupByMonth(filtered);
+  const dailyData = groupByDay(filtered);
   const hourlyData = groupByHour(filtered);
   const sensorTypeData = groupBySensorType(filtered);
   const recentReadings = [...filtered]
@@ -730,27 +873,57 @@ export function AnalyticsView() {
       {/* Charts Row 2 */}
       <div className="grid grid-cols-3 gap-6">
         <div className="col-span-2 bg-white backdrop-blur-xl border border-zinc-200 rounded-2xl p-5">
-          <h3 className="text-base font-semibold text-white mb-1">Profil horaire des mesures</h3>
-          <p className="text-zinc-500 text-xs mb-5">Valeur moyenne par heure de la journée</p>
-          {hourlyData.length === 0 ? (
-            <div className="h-56 flex items-center justify-center text-zinc-600 text-sm">{loading ? 'Chargement...' : 'Pas de données disponibles'}</div>
-          ) : (
-            <ResponsiveContainer width="100%" height={240}>
-              <AreaChart data={hourlyData}>
-                <defs>
-                  <linearGradient id="hourGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%" stopColor="#a78bfa" stopOpacity={0.35} />
-                    <stop offset="95%" stopColor="#a78bfa" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e1e2e" />
-                <XAxis dataKey="hour" stroke="#52525b" tick={{ fontSize: 10 }} />
-                <YAxis stroke="#52525b" tick={{ fontSize: 11 }} />
-                <Tooltip {...darkTooltipStyle} />
-                <Area type="monotone" dataKey="avg" stroke="#a78bfa" fill="url(#hourGrad)" strokeWidth={2} name="Valeur moy." />
-              </AreaChart>
-            </ResponsiveContainer>
-          )}
+          <h3 className="text-base font-semibold text-white mb-1">
+  Consommation réelle par jour
+</h3>
+
+<p className="text-zinc-500 text-xs mb-5">
+  Comparaison quotidienne de la consommation énergétique
+</p>
+
+{dailyData.length === 0 ? (
+  <div className="h-56 flex items-center justify-center text-zinc-600 text-sm">
+    {loading ? 'Chargement...' : 'Pas de données disponibles'}
+  </div>
+) : (
+  <ResponsiveContainer width="100%" height={240}>
+    <AreaChart data={dailyData}>
+      <defs>
+        <linearGradient id="dayGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="5%" stopColor="#38bdf8" stopOpacity={0.35} />
+          <stop offset="95%" stopColor="#38bdf8" stopOpacity={0} />
+        </linearGradient>
+      </defs>
+
+      <CartesianGrid strokeDasharray="3 3" stroke="#1e1e2e" />
+
+      <XAxis
+        dataKey="day"
+        stroke="#52525b"
+        tick={{ fontSize: 10 }}
+      />
+
+      <YAxis
+        stroke="#52525b"
+        tick={{ fontSize: 11 }}
+      />
+
+      <Tooltip
+        {...darkTooltipStyle}
+        formatter={(value: number) => [`${value.toFixed(2)} kWh`, 'Énergie']}
+      />
+
+      <Area
+        type="monotone"
+        dataKey="energy"
+        stroke="#38bdf8"
+        fill="url(#dayGrad)"
+        strokeWidth={2}
+        name="Consommation"
+      />
+    </AreaChart>
+  </ResponsiveContainer>
+)}
         </div>
 
         <div className="bg-white backdrop-blur-xl border border-zinc-200 rounded-2xl p-5">

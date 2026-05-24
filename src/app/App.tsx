@@ -5,6 +5,7 @@ import { EnergyView } from './components/EnergyView';
 import { EnvironmentView } from './components/EnvironmentView';
 import { BuildingView } from './components/BuildingView';
 import { AlertsView } from './components/AlertsView';
+import { AlertsAnomalies } from './components/AlertsAnomalies';
 import { AnalyticsView } from './components/AnalyticsView';
 import { OccupancyView } from './components/OccupancyView';
 import { AuthView } from './components/AuthView';
@@ -39,6 +40,8 @@ export default function App() {
         return <BuildingView />;
       case 'alerts':
         return <AlertsView />;
+      case 'alerts-anomalies':
+        return <AlertsAnomalies />;
       case 'analytics':
         return <AnalyticsView />;
       case 'occupancy':

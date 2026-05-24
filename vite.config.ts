@@ -26,6 +26,16 @@ export default defineConfig({
     exclude: ['web-ifc-three'],
   },
 
+  server: {
+    proxy: {
+      '/anomaly-api': {
+        target: 'http://localhost:8001',
+        changeOrigin: true,
+        rewrite: path => path.replace(/^\/anomaly-api/, ''),
+      },
+    },
+  },
+
   // File types to support raw imports. Never add .css, .tsx, or .ts files to this.
   assetsInclude: ['**/*.svg', '**/*.csv'],
 })
