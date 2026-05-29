@@ -12,6 +12,7 @@ import {
   DoorOpen,
   Network,
   TriangleAlert,
+  QrCode,
 } from 'lucide-react';
 import { getRoles, logout, isMaintenanceOnly } from '../../utils/auth';
 
@@ -36,6 +37,7 @@ const ALL_MENU_ITEMS: MenuItem[] = [
   { id: 'environment', icon: Thermometer,     label: 'Environment', allowedRoles: [] },
   { id: 'occupancy',   icon: Users,           label: 'Occupancy',   allowedRoles: [] },
   { id: 'reservation', icon: CalendarClock,   label: 'Reservation', allowedRoles: [] },
+  { id: 'qr-code-admin', icon: QrCode,        label: 'QR Code Admin', allowedRoles: [] },
   { id: 'building',    icon: Building2,       label: 'Building',    allowedRoles: [] },
 
   { id: 'digitalTwin', icon: Network, label: 'Digital Twin', allowedRoles: [] },
@@ -43,7 +45,9 @@ const ALL_MENU_ITEMS: MenuItem[] = [
   { id: 'alerts',      icon: Bell,            label: 'Alerts',      allowedRoles: [] }, // visible to all
   { id: 'alerts-anomalies', icon: TriangleAlert, label: 'Anomalies', allowedRoles: [] },
   { id: 'analytics',   icon: BarChart3,       label: 'Analytics',   allowedRoles: [] },
+  { id: 'dashboard-occupant',   icon: LayoutDashboard,       label: 'Dashboard Occupant',   allowedRoles: [] }
 ];
+
 
 export function Sidebar({ activeView, onViewChange }: SidebarProps) {
   const roles = getRoles();

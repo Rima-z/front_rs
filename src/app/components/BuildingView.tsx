@@ -140,18 +140,146 @@ function getReadableError(error: unknown): string {
   if (error && typeof error === 'object' && 'message' in error) return String((error as any).message);
   return String(error || 'Erreur inconnue');
 }
+function normalizeIfcKey(value: string): string {
+  return value.trim().toLowerCase();
+}
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+function containsIfcToken(alias: string, candidate: string): boolean {
+  const normalizedAlias = normalizeIfcKey(alias);
+  const normalizedCandidate = normalizeIfcKey(candidate);
+  if (normalizedCandidate.length < 3) return false;
+  return new RegExp(`(^|[^a-z0-9])${escapeRegExp(normalizedCandidate)}([^a-z0-9]|$)`, 'i')
+    .test(normalizedAlias);
+}
 function easeInOutCubic(t: number): number {
   return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
 }
 function getExpressIdsForCandidates(expressIdMap: Map<string, number[]>, candidates: string[]): number[] {
-  const normalizedCandidates = candidates.map(c => c.trim().toLowerCase()).filter(Boolean);
-  const selectedIds = new Set<number>();
-  expressIdMap.forEach((ids, key) => {
-    const normalizedKey = key.trim().toLowerCase();
-    const isMatch = normalizedCandidates.some(c => normalizedKey === c || normalizedKey.includes(c));
-    if (isMatch) ids.forEach(id => selectedIds.add(id));
-  });
-  return Array.from(selectedIds);
+  const cleanCandidates = candidates.map(c => c.trim()).filter(Boolean);
+
+  for (const candidate of cleanCandidates) {
+    const normalizedCandidate = normalizeIfcKey(candidate);
+    const selectedIds = new Set<number>();
+    expressIdMap.forEach((ids, key) => {
+      if (normalizeIfcKey(key) === normalizedCandidate) {
+        ids.forEach(id => selectedIds.add(id));
+      }
+    });
+    if (selectedIds.size > 0) return [Array.from(selectedIds)[0]];
+  }
+
+  for (const candidate of cleanCandidates) {
+    const selectedIds = new Set<number>();
+    expressIdMap.forEach((ids, key) => {
+      if (containsIfcToken(key, candidate)) {
+        ids.forEach(id => selectedIds.add(id));
+      }
+    });
+    if (selectedIds.size > 0) return [Array.from(selectedIds)[0]];
+  }
+
+  return [];
+}
+
+function parseContainedElementsBySpaceGlobalId(ifcText: string): Map<string, number[]> {
+  const spaceStepIdToGlobalId = new Map<number, string>();
+  const containedByGlobalId = new Map<string, number[]>();
+  const wallStepIds = new Set<number>();
+  const spaceRegex = /#(\d+)\s*=\s*IFCSPACE\('([^']+)'/g;
+  const wallRegex = /#(\d+)\s*=\s*IFCWALL(?:STANDARDCASE)?\(/g;
+  let spaceMatch: RegExpExecArray | null;
+  let wallMatch: RegExpExecArray | null;
+
+  while ((spaceMatch = spaceRegex.exec(ifcText)) !== null) {
+    spaceStepIdToGlobalId.set(Number(spaceMatch[1]), spaceMatch[2]);
+  }
+
+  while ((wallMatch = wallRegex.exec(ifcText)) !== null) {
+    wallStepIds.add(Number(wallMatch[1]));
+  }
+
+  const addIds = (globalId: string, ids: number[]) => {
+    if (ids.length === 0) return;
+    const existing = containedByGlobalId.get(globalId) ?? [];
+    ids.forEach(id => {
+      if (!existing.includes(id)) existing.push(id);
+    });
+    containedByGlobalId.set(globalId, existing);
+  };
+
+  const boundaryRegex = /IFCRELSPACEBOUNDARY\([^;]*?,\s*#(\d+)\s*,\s*#(\d+)\s*,\s*#[^,]+,\s*\.PHYSICAL\./g;
+  let boundaryMatch: RegExpExecArray | null;
+
+  while ((boundaryMatch = boundaryRegex.exec(ifcText)) !== null) {
+    const globalId = spaceStepIdToGlobalId.get(Number(boundaryMatch[1]));
+    const relatedElementId = Number(boundaryMatch[2]);
+    if (!globalId || !wallStepIds.has(relatedElementId)) continue;
+    addIds(globalId, [relatedElementId]);
+  }
+
+  return containedByGlobalId;
+}
+
+function createMeshForExpressIds(source: THREE.Mesh, expressIds: number[], material: THREE.Material): THREE.Mesh | null {
+  const sourceGeometry = source.geometry as THREE.BufferGeometry;
+  const position = sourceGeometry.getAttribute('position');
+  const normal = sourceGeometry.getAttribute('normal');
+  const expressIdAttr =
+    sourceGeometry.getAttribute('expressID') ??
+    sourceGeometry.getAttribute('expressId') ??
+    sourceGeometry.getAttribute('expressid');
+  if (!position || !expressIdAttr || expressIds.length === 0) return null;
+
+  const selected = new Set(expressIds);
+  const index = sourceGeometry.getIndex();
+  const positions: number[] = [];
+  const normals: number[] = [];
+
+  const pushVertex = (vertexIndex: number) => {
+    positions.push(position.getX(vertexIndex), position.getY(vertexIndex), position.getZ(vertexIndex));
+    if (normal) normals.push(normal.getX(vertexIndex), normal.getY(vertexIndex), normal.getZ(vertexIndex));
+  };
+
+  const shouldKeepTriangle = (a: number, b: number, c: number) => {
+    const aId = expressIdAttr.getX(a);
+    const bId = expressIdAttr.getX(b);
+    const cId = expressIdAttr.getX(c);
+    return selected.has(aId) || selected.has(bId) || selected.has(cId);
+  };
+
+  if (index) {
+    for (let i = 0; i < index.count; i += 3) {
+      const a = index.getX(i);
+      const b = index.getX(i + 1);
+      const c = index.getX(i + 2);
+      if (!shouldKeepTriangle(a, b, c)) continue;
+      pushVertex(a);
+      pushVertex(b);
+      pushVertex(c);
+    }
+  } else {
+    for (let i = 0; i < position.count; i += 3) {
+      if (!shouldKeepTriangle(i, i + 1, i + 2)) continue;
+      pushVertex(i);
+      pushVertex(i + 1);
+      pushVertex(i + 2);
+    }
+  }
+
+  if (positions.length === 0) return null;
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+  if (normals.length > 0) geometry.setAttribute('normal', new THREE.Float32BufferAttribute(normals, 3));
+  else geometry.computeVertexNormals();
+  geometry.computeBoundingBox();
+  geometry.computeBoundingSphere();
+
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.renderOrder = 999;
+  return mesh;
 }
 
 function tempToCss(t: number): string {
@@ -389,19 +517,23 @@ export function BuildingView() {
   const sceneRef            = useRef<THREE.Scene | null>(null);
   const cameraRef           = useRef<THREE.PerspectiveCamera | null>(null);
   const controlsRef         = useRef<OrbitControls | null>(null);
-  const animFrameRef        = useRef<number>(0);
-  const ifcModelRef         = useRef<IfcModel | null>(null);
-  const spaceExpressIdMapRef = useRef<Map<string, number[]>>(new Map());
-  const modelBoxRef         = useRef<THREE.Box3 | null>(null);
-  const cameraTweenRef      = useRef<CameraTween | null>(null);
+   const animFrameRef        = useRef<number>(0);
+   const ifcModelRef         = useRef<IfcModel | null>(null);
+   const spaceExpressIdMapRef = useRef<Map<string, number[]>>(new Map());
+   const spaceGlobalIdToExpressIdRef = useRef<Map<string, number>>(new Map());
+   const spaceGlobalIdToContainedExpressIdsRef = useRef<Map<string, number[]>>(new Map());
+   const selectedSubsetRef   = useRef<THREE.Mesh | null>(null);
+   const modelBoxRef         = useRef<THREE.Box3 | null>(null);
+   const cameraTweenRef      = useRef<CameraTween | null>(null);
+   const originalMaterialsRef = useRef<any>(null);
 
-  // Matériaux de sélection : normal (orange) et anomalie (rouge)
-  const selectionMaterialRef = useRef(
-    new THREE.MeshBasicMaterial({ color: 0xf5a623, transparent: true, opacity: 0.9, depthTest: true })
-  );
-  const anomalyMaterialRef = useRef(
-    new THREE.MeshBasicMaterial({ color: 0xe53e3e, transparent: true, opacity: 0.92, depthTest: false, depthWrite: false })
-  );
+   // Matériaux de sélection : normal (orange) et anomalie (rouge)
+   const selectionMaterialRef = useRef(
+     new THREE.MeshBasicMaterial({ color: 0xf5a623, transparent: true, opacity: 0.35, depthTest: true, depthWrite: false, side: THREE.DoubleSide })
+   );
+   const anomalyMaterialRef = useRef(
+     new THREE.MeshBasicMaterial({ color: 0xe53e3e, transparent: true, opacity: 0.35, depthTest: true, depthWrite: false, side: THREE.DoubleSide })
+   );
   // Map roomName → matériau de surbrillance anomalie (un subset par pièce anomale)
   const anomalySubsetsRef = useRef<Map<string, THREE.Mesh>>(new Map());
 
@@ -414,6 +546,7 @@ export function BuildingView() {
   const [spaceFloorMap,    setSpaceFloorMap]    = useState<SpaceFloorMapping[]>([]);
   const [selectedFloor,    setSelectedFloor]    = useState<string>('B1 BASEMENT');
   const [selectedRoom,     setSelectedRoom]     = useState<string | null>(null);
+  const [selectedSpaceGlobalId, setSelectedSpaceGlobalId] = useState<string | null>(null);
   const [wsConnected,      setWsConnected]      = useState(false);
   const [modelStatus,      setModelStatus]      = useState<'loading' | 'loaded' | 'error'>('loading');
   const [modelError,       setModelError]       = useState('');
@@ -614,17 +747,30 @@ export function BuildingView() {
 
     void (async () => {
       try { await loader.ifcManager.setWasmPath('/wasm/'); } catch (e) { handleLoadError(e); return; }
-      loader.load('/models/otc.enriched.ifc', async (ifc) => {
-        if (isDisposed) return;
-        try {
-          const ifcModel = ifc as IfcModel;
-          ifcModelRef.current = ifcModel;
-          spaceExpressIdMapRef.current.clear();
-          scene.add(ifcModel);
+      try {
+        const ifcText = await fetch('/models/otc.enriched.ifc').then(r => r.text());
+        spaceGlobalIdToContainedExpressIdsRef.current = parseContainedElementsBySpaceGlobalId(ifcText);
+      } catch {
+        spaceGlobalIdToContainedExpressIdsRef.current.clear();
+      }
+       loader.load('/models/otc.enriched.ifc', async (ifc) => {
+         if (isDisposed) return;
+         try {
+           const ifcModel = ifc as IfcModel;
+           ifcModelRef.current = ifcModel;
+           // Store the original materials for later use when selecting a room
+           if (originalMaterialsRef.current === null) {
+             originalMaterialsRef.current = ifcModel.material;
+           }
+           spaceExpressIdMapRef.current.clear();
+           spaceGlobalIdToExpressIdRef.current.clear();
+           scene.add(ifcModel);
 
           const spaces = await ifcModel.ifcManager.getAllItemsOfType(ifcModel.modelID, IFCSPACE, true);
           spaces.forEach(space => {
             const expressID = space.expressID;
+            const globalId = getIfcText(space.GlobalId);
+            if (globalId) spaceGlobalIdToExpressIdRef.current.set(globalId, expressID);
             [getIfcText(space.GlobalId), getIfcText(space.Name), getIfcText(space.LongName)]
               .filter(Boolean)
               .forEach(alias => {
@@ -691,10 +837,10 @@ export function BuildingView() {
       const severity = worstSeverity(anomalies);
       const color    = anomalyToHex(severity);
 
-      const mat = new THREE.MeshBasicMaterial({
-        color, transparent: true, opacity: 0.75,
-        depthTest: true, depthWrite: false,
-      });
+       const mat = new THREE.MeshBasicMaterial({
+         color, transparent: true, opacity: 0.35,
+         depthTest: true, depthWrite: false,
+       });
 
       const candidates = [roomName];
       const expressIds = getExpressIdsForCandidates(spaceExpressIdMapRef.current, candidates);
@@ -709,10 +855,11 @@ export function BuildingView() {
           removePrevious: false,
           customID: `anomaly-${roomName}`,
         });
+        subset.visible = !selectedRoom;
         anomalySubsetsRef.current.set(roomName, subset);
       } catch { /* pièce sans géométrie */ }
     });
-  }, [anomalyByRoom, modelStatus]);
+  }, [anomalyByRoom, modelStatus, selectedRoom]);
 
   // ── Sélection d'une pièce + mode fantôme ─────────────────────
   const roomToIfcCandidates = useMemo(() => {
@@ -749,75 +896,105 @@ export function BuildingView() {
       (ifcModel as any).__baseMaterials ??
       (Array.isArray(ifcModel.material) ? ifcModel.material : [ifcModel.material]);
 
+    ifcModel.visible = true;
+
     if (selectedRoom) {
-      baseMaterials.forEach(mat => { mat.transparent = true; mat.opacity = 0.10; mat.depthWrite = false; mat.needsUpdate = true; });
+      baseMaterials.forEach(mat => { mat.transparent = true; mat.opacity = 0.14; mat.depthWrite = false; mat.needsUpdate = true; });
     } else {
       baseMaterials.forEach(mat => { mat.transparent = false; mat.opacity = 1.0; mat.depthWrite = true; mat.needsUpdate = true; });
     }
 
-    const ifcCandidates = selectedRoom ? (roomToIfcCandidates.get(selectedRoom) ?? [selectedRoom]) : [];
-    const globalIds     = selectedRoom ? (roomToGlobalIds.get(selectedRoom) ?? []) : [];
+    anomalySubsetsRef.current.forEach((subset) => {
+      subset.visible = !selectedRoom;
+    });
 
-    const matchingIds = new Set<number>();
-    if (selectedRoom) {
-      if (globalIds.length > 0) {
-        spaceExpressIdMapRef.current.forEach((ids, alias) => {
-          if (globalIds.some(gid => alias === gid || alias.trim() === gid.trim())) ids.forEach(id => matchingIds.add(id));
-        });
-      }
-      if (matchingIds.size === 0) {
-        const selectedLower = selectedRoom.toLowerCase();
-        spaceExpressIdMapRef.current.forEach((ids, alias) => {
-          const aliasLower = alias.toLowerCase();
-          if (aliasLower === selectedLower || aliasLower.includes(selectedLower) || selectedLower.includes(aliasLower)) {
-            ids.forEach(id => matchingIds.add(id));
+    const selectedIfcMapping = selectedSpaceGlobalId
+      ? spaceFloorMap.find(s => s.spaceGlobalId === selectedSpaceGlobalId)
+      : null;
+    const ifcCandidates = selectedRoom
+      ? selectedIfcMapping
+        ? getSpaceRoomCandidates(selectedIfcMapping)
+        : (roomToIfcCandidates.get(selectedRoom) ?? [selectedRoom])
+      : [];
+    const globalIds     = selectedRoom
+      ? selectedSpaceGlobalId
+        ? [selectedSpaceGlobalId]
+        : (roomToGlobalIds.get(selectedRoom) ?? [])
+      : [];
+
+    const selectedExpressId = selectedSpaceGlobalId
+      ? spaceGlobalIdToExpressIdRef.current.get(selectedSpaceGlobalId)
+      : undefined;
+    const selectedContainedExpressIds = selectedSpaceGlobalId
+      ? spaceGlobalIdToContainedExpressIdsRef.current.get(selectedSpaceGlobalId) ?? []
+      : [];
+    const selectedExpressIds = selectedRoom
+      ? selectedExpressId !== undefined
+        ? [selectedExpressId]
+        : getExpressIdsForCandidates(spaceExpressIdMapRef.current, [...globalIds, ...ifcCandidates, selectedRoom])
+      : [];
+
+     ifcModel.ifcManager.removeSubset(ifcModel.modelID, undefined, 'selected-space');
+     if (selectedSubsetRef.current) {
+       selectedSubsetRef.current.parent?.remove(selectedSubsetRef.current);
+       selectedSubsetRef.current.geometry?.dispose();
+       if (selectedSubsetRef.current.userData?.customMaterial) {
+         selectedSubsetRef.current.userData.customMaterial.dispose();
+       }
+       selectedSubsetRef.current = null;
+     }
+
+     if (selectedRoom && selectedExpressIds.length > 0) {
+       const hasAnomaly = (anomalyByRoom.get(selectedRoom) ?? []).length > 0;
+       const severity   = worstSeverity(anomalyByRoom.get(selectedRoom) ?? []);
+
+       // Couleur de sélection : rouge si anomalie, orange sinon
+       selectionMaterialRef.current.color.setHex(hasAnomaly ? anomalyToHex(severity) : 0xf5a623);
+       selectionMaterialRef.current.needsUpdate = true;
+
+        try {
+          let materialToUse;
+          if (originalMaterialsRef.current) {
+            const originalMaterial = originalMaterialsRef.current;
+            // Clone the material to preserve original appearance
+            if (Array.isArray(originalMaterial)) {
+              materialToUse = originalMaterial[0].clone();
+            } else {
+              materialToUse = originalMaterial.clone();
+            }
+            // Ensure the selected room is fully visible (opaque)
+            materialToUse.opacity = 1.0;
+            materialToUse.needsUpdate = true;
           } else {
-            ifcCandidates.forEach(c => {
-              const cLower = c.toLowerCase();
-              if (aliasLower === cLower || aliasLower.includes(cLower) || cLower.includes(aliasLower)) ids.forEach(id => matchingIds.add(id));
-            });
+            // Fallback to a visible material if we don't have original materials
+            selectionMaterialRef.current.color.setHex(0xffffff); // white
+            selectionMaterialRef.current.opacity = 1.0;
+            selectionMaterialRef.current.needsUpdate = true;
+            materialToUse = selectionMaterialRef.current;
           }
-        });
-      }
-    }
 
-    const selectedExpressIds = matchingIds.size > 0
-      ? Array.from(matchingIds)
-      : getExpressIdsForCandidates(spaceExpressIdMapRef.current, ifcCandidates);
-
-    ifcModel.ifcManager.removeSubset(ifcModel.modelID, selectionMaterialRef.current, 'selected-space');
-
-    if (selectedRoom && selectedExpressIds.length > 0) {
-      const hasAnomaly = (anomalyByRoom.get(selectedRoom) ?? []).length > 0;
-      const severity   = worstSeverity(anomalyByRoom.get(selectedRoom) ?? []);
-
-      // Couleur de sélection : rouge si anomalie, orange sinon
-      selectionMaterialRef.current.color.setHex(hasAnomaly ? anomalyToHex(severity) : 0xf5a623);
-      selectionMaterialRef.current.opacity   = 0.95;
-      selectionMaterialRef.current.depthTest  = false;
-      selectionMaterialRef.current.depthWrite = true;
-      selectionMaterialRef.current.needsUpdate = true;
-
-      try {
-        const subset = ifcModel.ifcManager.createSubset({
-          modelID: ifcModel.modelID,
-          ids: selectedExpressIds,
-          material: selectionMaterialRef.current,
-          scene,
-          removePrevious: true,
-          customID: 'selected-space',
-        });
-        const box = new THREE.Box3().setFromObject(subset);
-        const hasGeometry = !box.isEmpty();
-        setSelectedRoomHasGeometry(hasGeometry);
-        if (hasGeometry) focusCameraOnBox(box, 1.45);
-      } catch { setSelectedRoomHasGeometry(false); }
+          const subset = createMeshForExpressIds(ifcModel, selectedExpressIds, materialToUse);
+          if (!subset) {
+            setSelectedRoomHasGeometry(false);
+            return;
+          }
+          // Store the material we created (if it's a clone) so we can dispose it later
+          if (materialToUse !== selectionMaterialRef.current && materialToUse.userData?.clone === undefined) {
+            subset.userData.customMaterial = materialToUse;
+          }
+          scene.add(subset);
+          selectedSubsetRef.current = subset;
+          const box = new THREE.Box3().setFromObject(subset);
+          const hasGeometry = !box.isEmpty();
+          setSelectedRoomHasGeometry(hasGeometry);
+          if (hasGeometry) focusCameraOnBox(box, 1.45);
+        } catch { setSelectedRoomHasGeometry(false); }
     } else {
       setSelectedRoomHasGeometry(false);
     }
 
     if (!selectedRoom && modelBoxRef.current) focusCameraOnBox(modelBoxRef.current, 2.4);
-  }, [selectedRoom, roomToIfcCandidates, roomToGlobalIds, modelStatus, anomalyByRoom]);
+  }, [selectedRoom, selectedSpaceGlobalId, spaceFloorMap, roomToIfcCandidates, roomToGlobalIds, modelStatus, anomalyByRoom]);
 
   // ── Données dérivées ──────────────────────────────────────────
   const roomsOnFloor = useMemo(() => {
@@ -854,7 +1031,9 @@ export function BuildingView() {
   }, [spaceFloorMap]);
 
   const selectedMapping = selectedRoom
-    ? spaceFloorMap.find(s => getSpaceRoomCandidates(s).includes(selectedRoom))
+    ? selectedSpaceGlobalId
+      ? spaceFloorMap.find(s => s.spaceGlobalId === selectedSpaceGlobalId)
+      : spaceFloorMap.find(s => getSpaceRoomCandidates(s).includes(selectedRoom))
     : null;
   const selectedData = selectedRoom
     ? rooms.get(selectedRoom) ?? roomsOnFloor.find(r => r.roomName === selectedRoom) ?? null
@@ -917,7 +1096,7 @@ export function BuildingView() {
             return (
               <button
                 key={f.key}
-                onClick={() => { setSelectedFloor(f.key); setSelectedRoom(null); }}
+                onClick={() => { setSelectedFloor(f.key); setSelectedRoom(null); setSelectedSpaceGlobalId(null); }}
                 className={`mb-3 flex w-full items-center justify-between rounded-2xl border p-4 text-left transition-all ${isActive ? 'border-zinc-300 bg-[#efe2ba] shadow-sm' : 'border-zinc-100 bg-zinc-50/60 hover:bg-zinc-100/80'}`}
               >
                 <div className="flex items-center gap-3">
@@ -1021,7 +1200,7 @@ export function BuildingView() {
                   <p className="mt-1 text-sm text-zinc-500">Informations capteurs</p>
                 </div>
                 <button
-                  onClick={() => setSelectedRoom(null)}
+                  onClick={() => { setSelectedRoom(null); setSelectedSpaceGlobalId(null); }}
                   className="rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-sm text-zinc-600 transition hover:bg-zinc-100"
                 >✕</button>
               </div>
@@ -1086,7 +1265,7 @@ export function BuildingView() {
               )}
 
               <button
-                onClick={() => setSelectedRoom(null)}
+                onClick={() => { setSelectedRoom(null); setSelectedSpaceGlobalId(null); }}
                 className="flex w-full items-center justify-center gap-2 rounded-xl border border-zinc-200 bg-zinc-50 px-4 py-2 text-sm text-zinc-600 transition hover:bg-zinc-100"
               >
                 <ArrowLeft className="h-4 w-4" />
@@ -1111,7 +1290,10 @@ export function BuildingView() {
                   return (
                     <div
                       key={r.roomName}
-                      onClick={() => setSelectedRoom(r.roomName)}
+                      onClick={() => {
+                        setSelectedRoom(r.roomName);
+                        setSelectedSpaceGlobalId(r.spaceGlobalIds[0] ?? null);
+                      }}
                       className={`cursor-pointer rounded-2xl border p-3 transition-all ${
                         isSelected
                           ? hasAnomaly
@@ -1182,4 +1364,4 @@ const SensorRow: React.FC<{ icon: React.ReactNode; label: string; value: string 
     </div>
     <span className="font-semibold text-zinc-800 text-sm">{value}</span>
   </div>
-);
+); 
